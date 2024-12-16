@@ -72,10 +72,8 @@ class CRUDReservation(CRUDBase):
     ) -> list[dict[str, int]]:
         reservations = await session.execute(
             select(
-                [
-                    self.model.meetingroom_id,
-                    func.count(self.model.meetingroom_id)
-                ]
+                self.model.meetingroom_id,
+                func.count(self.model.meetingroom_id)
             ).where(
                 self.model.from_reserve >= from_reserve,
                 self.model.to_reserve <= to_reserve

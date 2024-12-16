@@ -18,7 +18,6 @@ router = APIRouter()
 @router.post(
     '/',
     # Тип возвращаемого эндпоинтом ответа
-    response_model=list[dict[str, int]],
     # Определяем зависимости
     dependencies=[Depends(current_superuser)],
 )
@@ -37,10 +36,13 @@ async def get_report(
     reservations = await reservation_crud.get_count_res_at_the_same_time(
         from_reserve, to_reserve, session
     )
+    print()
+    print(reservations)
+    print()
     # Вызов функций
     spreadsheetid = await spreadsheets_create(wrapper_services)
     await set_user_permissions(spreadsheetid, wrapper_services)
     await spreadsheets_update_value(spreadsheetid,
                                     reservations,
                                     wrapper_services)
-    return reservations
+    return 'Готово'

@@ -63,8 +63,11 @@ async def spreadsheets_update_value(
         ['ID переговорки', 'Кол-во бронирований']
     ]
     # Здесь в таблицу добавляются строчки
-    for res in reservations:
-        new_row = [str(res['meetingroom_id']), str(res['count'])]
+    print()
+    print(f'{reservations=}')
+    print()
+    for room, res in reservations:
+        new_row = [str(room), str(res)]
         table_values.append(new_row)
 
     update_body = {
