@@ -1,7 +1,11 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.schemas.reservation import ReservationCreateSchema, ReservationDBSchema, ReservationUpdateSchema
+from app.schemas.reservation import (
+    ReservationCreateSchema,
+    ReservationDBSchema,
+    ReservationUpdateSchema
+)
 from app.crud.reservation import reservation_crud
 from app.core.db import get_async_session
 from app.api.validators import (
@@ -23,7 +27,6 @@ router = APIRouter()
 async def create_reservation(
         reservation: ReservationCreateSchema,
         session: AsyncSession = Depends(get_async_session),
-        # Получаем текущего пользователя и сохраняем в переменную user.
         user: User = Depends(current_user),
 ):
     await check_meeting_room_exists(reservation.meetingroom_id, session)
@@ -70,23 +73,17 @@ async def update_reservation(
         user: User = Depends(current_user),
         session: AsyncSession = Depends(get_async_session),
 ):
-    # Проверяем, что такой объект бронирования вообще существует.
     reservation = await check_reservation_before_edit(
         reservation_id, user, session
     )
-    # Проверяем, что нет пересечений с другими бронированиями.
     await check_reservation_intersections(
-        # Новое время бронирования, распакованное на ключевые аргументы.
         **obj_in.dict(),
-        # id обновляемого объекта бронирования,
         reservation_id=reservation_id,
-        # id переговорки.
         meetingroom_id=reservation.meetingroom_id,
         session=session
     )
     reservation = await reservation_crud.update(
         db_obj=reservation,
-        # На обновление передаем объект класса ReservationUpdate, как и требуется.
         obj_in=obj_in,
         session=session,
     )

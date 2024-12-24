@@ -15,7 +15,7 @@
     - [email](mailto:andrey.pydev@gmail.com)
   
 ## Технологии  
-- [Python](https://www.python.org/)
+- [Python 3.9](https://www.python.org/downloads/release/python-390/)
 - [FastAPI](https://fastapi.tiangolo.com/)
 - [Alembic](https://alembic.sqlalchemy.org/en/latest/index.html)
 - [SQLAlchemy](https://docs.sqlalchemy.org/en/20/)

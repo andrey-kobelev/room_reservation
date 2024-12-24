@@ -1,3 +1,3 @@
-from .meeting_room import MeetingRoomModel
-from .reservation import ReservationModel
-from .user import User
+from .meeting_room import MeetingRoomModel # noqa
+from .reservation import ReservationModel # noqa
+from .user import User # noqa

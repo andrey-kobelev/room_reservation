@@ -41,15 +41,14 @@ class ReservationUpdateSchema(ReservationBaseSchema):
             )
         return data
 
+
 class ReservationCreateSchema(ReservationBaseSchema):
     meetingroom_id: int
-
 
 
 class ReservationDBSchema(ReservationBaseSchema):
     id: int
     meetingroom_id: int
-    # Добавьте опциональное поле user_id.
     user_id: Optional[int]
 
     class Config:

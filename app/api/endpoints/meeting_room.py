@@ -1,9 +1,7 @@
 from fastapi import APIRouter, Depends
 
-# Импортируем класс асинхронной сессии для аннотации параметра.
 from sqlalchemy.ext.asyncio import AsyncSession
 
-# Импортируем асинхронный генератор сессий.
 from app.core.db import get_async_session
 from app.crud.meeting_room import meeting_room_crud
 from app.schemas.meeting_room import (
@@ -27,12 +25,11 @@ router = APIRouter()
     '/',
     response_model=MeetingRoomDBSchema,
     response_model_exclude_none=True,
-    # Добавьте вызов зависимости при обработке запроса.
     dependencies=[Depends(current_superuser)],
 )
 async def create_new_meeting_room(
         meeting_room: MeetingRoomCreateSchema,
-        # Указываем зависимость, предоставляющую объект сессии, как параметр функции.
+
         session: AsyncSession = Depends(get_async_session),
 ):
     """Только для суперюзеров."""
@@ -64,21 +61,22 @@ async def get_reservations_for_room(
         session: AsyncSession = Depends(get_async_session),
 ):
     await check_meeting_room_exists(meeting_room_id, session)
-    reservations = await reservation_crud.get_future_reservations_for_room(meeting_room_id, session)
+    reservations = (
+        await reservation_crud.get_future_reservations_for_room(
+            meeting_room_id, session
+        )
+    )
     return reservations
 
 
 @router.patch(
-    # ID обновляемого объекта будет передаваться path-параметром.
     '/{meeting_room_id}',
     response_model=MeetingRoomDBSchema,
     response_model_exclude_none=True,
     dependencies=[Depends(current_superuser)],
 )
 async def partially_update_meeting_room(
-        # ID обновляемого объекта.
         meeting_room_id: int,
-        # JSON-данные, отправленные пользователем.
         obj_in: MeetingRoomUpdateSchema,
         session: AsyncSession = Depends(get_async_session),
 ):
@@ -86,7 +84,6 @@ async def partially_update_meeting_room(
         meeting_room_id, session
     )
     if obj_in.name is not None:
-        # Если в запросе получено поле name — проверяем его на уникальность.
         await check_name_duplicate(obj_in.name, session)
 
     meeting_room = await meeting_room_crud.update(
@@ -105,7 +102,6 @@ async def remove_meeting_room(
         meeting_room_id: int,
         session: AsyncSession = Depends(get_async_session),
 ):
-    # Выносим повторяющийся код в отдельную корутину.
     meeting_room = await check_meeting_room_exists(
         meeting_room_id, session
     )

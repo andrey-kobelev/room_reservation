@@ -60,7 +60,9 @@ async def check_reservation_before_edit(
 
 
 async def check_reservation_intersections(**kwargs) -> None:
-    reservations = await reservation_crud.get_reservations_at_the_same_time(**kwargs)
+    reservations = (
+        await reservation_crud.get_reservations_at_the_same_time(**kwargs)
+    )
     if reservations:
         raise HTTPException(
             status_code=422,
