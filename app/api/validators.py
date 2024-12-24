@@ -8,7 +8,6 @@ from app.models.meeting_room import MeetingRoomModel
 from app.models.reservation import ReservationModel
 
 
-# Корутина, проверяющая уникальность полученного имени переговорки.
 async def check_name_duplicate(
         room_name: str,
         session: AsyncSession,
@@ -21,7 +20,6 @@ async def check_name_duplicate(
         )
 
 
-# Оформляем повторяющийся код в виде отдельной корутины.
 async def check_meeting_room_exists(
         meeting_room_id: int,
         session: AsyncSession,
